@@ -9,8 +9,15 @@
 @media only screen and (min-width: 768px) {
   .container {
     max-width: 768px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 80px;
+    margin-top: 32px;
+    flex-direction: row;
   }
 }
+
 /* Styles for Desktop devices */
 @media only screen and (min-width: 1200px) {
   .container {

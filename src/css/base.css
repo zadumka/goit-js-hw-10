@@ -30,3 +30,7 @@ main {
 main:has(.back-link) {
   text-align: center;
 }
+.main-title {
+  font-size: 28px;
+  color: rgb(78, 19, 19);
+}
