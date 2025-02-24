@@ -7,6 +7,7 @@ import 'izitoast/dist/css/iziToast.min.css';
 flatpickr('#datetime-picker', {
   enableTime: true,
   time_24hr: true,
+  minuteIncrement: 1,
   locale: {
     firstDayOfWeek: 1,
     weekdays: {
