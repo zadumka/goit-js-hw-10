@@ -190,3 +190,13 @@ color: #333 !important;
 .flatpickr-time input.flatpickr-second {
   font-weight: bold !important;
 }
+#datetime-picker:focus {
+  border: 1px solid #4E75FF !important;
+  outline: none !important;
+  color: #000000 !important;
+}
+#datetime-picker:active {
+  border: 1px solid #4E75FF !important;
+  outline: none !important;
+  color: #000000 !important;
+}
