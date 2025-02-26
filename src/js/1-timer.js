@@ -1,6 +1,6 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-import icon from '../img/octagon.svg';
+import icon from '/octagon.svg';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
@@ -47,7 +47,7 @@ flatpickr('#datetime-picker', {
           color: '#EF4040',
           timeout: 3000,
           iconColor: '#fff',
-          iconUrl: '../img/octagon.svg',
+          iconUrl: '/octagon.svg',
         });
         button.disabled = true;
         return;
