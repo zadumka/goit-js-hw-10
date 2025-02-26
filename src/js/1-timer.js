@@ -46,7 +46,6 @@ flatpickr('#datetime-picker', {
           position: 'topRight',
           color: '#EF4040',
           timeout: 3000,
-          iconColor: '#fff',
           iconUrl: icon,
         });
         button.disabled = true;
