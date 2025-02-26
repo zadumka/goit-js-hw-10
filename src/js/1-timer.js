@@ -1,8 +1,18 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-
+import icon from '../img/octagon.svg';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
+
+let userSelectedDate = null;
+let interval;
+const input = document.querySelector('#datetime-picker');
+const button = document.querySelector('button[data-start]');
+button.disabled = true;
+const days = document.querySelector('[data-days]');
+const hours = document.querySelector('[data-hours]');
+const minutes = document.querySelector('[data-minutes]');
+const seconds = document.querySelector('[data-seconds]');
 
 flatpickr('#datetime-picker', {
   enableTime: true,
@@ -24,106 +34,67 @@ flatpickr('#datetime-picker', {
     },
   },
   onClose(selectedDates) {
-    console.log(selectedDates[0]);
+    if (selectedDates.length > 0) {
+      const selectedDate = selectedDates[0];
+
+      if (selectedDate.getTime() < Date.now()) {
+        iziToast.show({
+          title: 'Error',
+          titleColor: '#FFFFFF',
+          message: 'Please choose a date in the future',
+          messageColor: '#FFFFFF',
+          position: 'topRight',
+          color: '#EF4040',
+          timeout: 3000,
+          iconColor: '#fff',
+          iconUrl: '../img/octagon.svg',
+        });
+        button.disabled = true;
+        return;
+      }
+
+      userSelectedDate = selectedDate;
+      button.disabled = false;
+
+      // localStorage.setItem('userSelectedDate', selectedDate.getTime());
+      // localStorage.removeItem('timeLeft');
+    }
   },
   dateFormat: 'Y-m-d H:i',
   defaultDate: new Date(),
 });
 
-const input = document.querySelector('#datetime-picker');
-const button = document.querySelector('button[data-start]');
-const days = document.querySelector('[data-days]');
-const hours = document.querySelector('[data-hours]');
-const minutes = document.querySelector('[data-minutes]');
-const seconds = document.querySelector('[data-seconds]');
-
-let selectedDate = null;
-
-const setTime = date => {
-  const nowTime =
-    date.getFullYear() +
-    '-' +
-    String(date.getMonth() + 1).padStart(2, '0') +
-    '-' +
-    String(date.getDate()).padStart(2, '0') +
-    ' ' +
-    String(date.getHours()).padStart(2, '0') +
-    ':' +
-    String(date.getMinutes()).padStart(2, '0');
-
-  input.value = nowTime;
-};
-
-setInterval(() => {
-  if (!selectedDate) {
-    const currentTime = new Date();
-    setTime(currentTime);
-  }
-}, 1000);
-
-input.addEventListener('change', () => {
-  const newSelectedDate = new Date(input.value);
-  if (newSelectedDate < new Date()) {
-    iziToast.show({
-      title: 'Error',
-      message: 'You selected a valid future date.',
-      position: 'topRight',
-      color: '#EF4040',
-      timeout: 3000,
-    });
-  } else {
-    selectedDate = newSelectedDate;
-    setTime(selectedDate);
-  }
-});
-
-input.addEventListener('change', () => {
-  const currentDate = new Date();
-  const selectedDate = new Date(input.value);
-
-  if (selectedDate > currentDate) {
-    button.style.backgroundColor = '#4E75FF';
-    button.style.color = '#FFFFFF';
-  } else {
-    button.style.backgroundColor = '';
-    button.style.color = '';
-  }
-});
-
-button.addEventListener('mouseenter', mouseEnter);
-button.addEventListener('mouseleave', mouseLeave);
-
-function mouseEnter() {
-  const currentDate = new Date();
-  const selectedDate = new Date(input.value);
-  if (selectedDate > currentDate) {
-    button.style.backgroundColor = '#6C8CFF';
-  }
-}
-
-function mouseLeave() {
-  const currentDate = new Date();
-  const selectedDate = new Date(input.value);
-
-  if (selectedDate > currentDate) {
-    button.style.backgroundColor = '#4E75FF';
-  }
-}
+// const savedDate = localStorage.getItem('userSelectedDate');
+// if (savedDate) {
+//   userSelectedDate = new Date(Number(savedDate));
+//   button.disabled = true;
+//   input.disabled = true;
+// }
 
 button.addEventListener('click', () => {
-  const selectedDate = new Date(input.value);
-  startTimer(selectedDate);
-  deactivate();
+  startTimer(userSelectedDate);
+  input.disabled = true;
+  button.disabled = true;
 });
 
 function startTimer(targetDate) {
-  const interval = setInterval(() => {
+  if (interval) {
+    clearInterval(interval);
+  }
+
+  interval = setInterval(() => {
     const currentTime = new Date();
     const timeLeft = targetDate - currentTime;
 
+    // localStorage.setItem('timeLeft', timeLeft);
+
     if (timeLeft <= 0) {
       clearInterval(interval);
-      reset();
+      input.disabled = false;
+      button.disabled = true;
+
+      // localStorage.removeItem('userSelectedDate');
+      // localStorage.removeItem('timeLeft');
     } else {
       const daysLeft = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
       const hoursLeft = Math.floor(
@@ -142,22 +113,15 @@ function startTimer(targetDate) {
   }, 1000);
 }
 
-function deactivate() {
-  input.disabled = true;
-  button.disabled = true;
-  button.style.backgroundColor = '';
-  button.style.color = '';
-  input.style.borderColor = '#808080';
-  input.style.backgroundColor = '#FAFAFA';
-  input.style.color = '#808080';
-  button.removeEventListener('mouseenter', mouseEnter);
-  button.removeEventListener('mouseleave', mouseLeave);
-}
-
-function reset() {
-  input.disabled = false;
-  button.disabled = false;
-  input.style.borderColor = '';
-  input.style.backgroundColor = '';
-  input.style.color = '';
-}
+// const savedTimeLeft = localStorage.getItem('timeLeft');
+// if (savedTimeLeft && userSelectedDate) {
+//   const remainingTime = Number(savedTimeLeft);
+//   if (remainingTime > 0) {
+//     startTimer(userSelectedDate);
+//   } else {
+//     button.disabled = true;
+//     input.disabled = false;
+//   }
+// }
+// localStorage.removeItem('userSelectedDate');
+// localStorage.removeItem('timeLeft');

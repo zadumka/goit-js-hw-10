@@ -59,20 +59,36 @@ main:has(.back-link) {
   border: 1px solid #4E75FF;
   color: #000000;
 }
+#datetime-picker:disabled {
+  border-color: #808080;
+  background: #FAFAFA;
+  color: #808080;
+  pointer-events: none;
+}
 button[data-start] {
   border-radius: 8px;
   padding: 8px 16px;
   width: 75px;
   height: 40px;
-  background: #cfcfcf;
+  background: #4E75FF;
   border: none;
   font-family: "Montserrat", sans-serif;
   font-weight: 500;
   font-size: 16px;
   line-height: 150%;
   letter-spacing: 0.04em;
-  color: #989898;
+  color: #FFFFFF;
+  transition: background-color 0.3s ease;
 }
+button[data-start]:hover {
+  background:#6C8CFF;
+}
+button[data-start]:disabled {
+  background-color: #CFCFCF;
+  color: #989898;
+  pointer-events: none;
+}
+
 .timer {
   display: flex;
   justify-content: center;
