@@ -52,76 +52,46 @@ flatpickr('#datetime-picker', {
         button.disabled = true;
         return;
       }
-
       userSelectedDate = selectedDate;
       button.disabled = false;
-
-      // localStorage.setItem('userSelectedDate', selectedDate.getTime());
-      // localStorage.removeItem('timeLeft');
     }
   },
   dateFormat: 'Y-m-d H:i',
   defaultDate: new Date(),
 });
 
-// const savedDate = localStorage.getItem('userSelectedDate');
-// if (savedDate) {
-//   userSelectedDate = new Date(Number(savedDate));
-//   button.disabled = true;
-//   input.disabled = true;
-// }
+function addLeadingZero(value) {
+  return String(value).padStart(2, '0');
+}
+function convertMs(ms) {
+  const second = 1000;
+  const minute = second * 60;
+  const hour = minute * 60;
+  const day = hour * 24;
 
-button.addEventListener('click', () => {
-  startTimer(userSelectedDate);
+  const days = Math.floor(ms / day);
+  const hours = Math.floor((ms % day) / hour);
+  const minutes = Math.floor(((ms % day) % hour) / minute);
+  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+  return { days, hours, minutes, seconds };
+}
+
+button.addEventListener('click', startTimer);
+
+function startTimer() {
   input.disabled = true;
   button.disabled = true;
-});
-
-function startTimer(targetDate) {
-  if (interval) {
-    clearInterval(interval);
-  }
-
   interval = setInterval(() => {
-    const currentTime = new Date();
-    const timeLeft = targetDate - currentTime;
-
-    // localStorage.setItem('timeLeft', timeLeft);
-
+    const timeLeft = userSelectedDate - new Date();
     if (timeLeft <= 0) {
       clearInterval(interval);
       input.disabled = false;
-      button.disabled = true;
-
-      // localStorage.removeItem('userSelectedDate');
-      // localStorage.removeItem('timeLeft');
-    } else {
-      const daysLeft = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-      const hoursLeft = Math.floor(
-        (timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-      );
-      const minutesLeft = Math.floor(
-        (timeLeft % (1000 * 60 * 60)) / (1000 * 60)
-      );
-      const secondsLeft = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-      days.textContent = String(daysLeft).padStart(2, '0');
-      hours.textContent = String(hoursLeft).padStart(2, '0');
-      minutes.textContent = String(minutesLeft).padStart(2, '0');
-      seconds.textContent = String(secondsLeft).padStart(2, '0');
+      return;
     }
+    const { days: d, hours: h, minutes: m, seconds: s } = convertMs(timeLeft);
+    days.textContent = addLeadingZero(d);
+    hours.textContent = addLeadingZero(h);
+    minutes.textContent = addLeadingZero(m);
+    seconds.textContent = addLeadingZero(s);
   }, 1000);
 }
-
-// const savedTimeLeft = localStorage.getItem('timeLeft');
-// if (savedTimeLeft && userSelectedDate) {
-//   const remainingTime = Number(savedTimeLeft);
-//   if (remainingTime > 0) {
-//     startTimer(userSelectedDate);
-//   } else {
-//     button.disabled = true;
-//     input.disabled = false;
-//   }
-// }
-// localStorage.removeItem('userSelectedDate');
-// localStorage.removeItem('timeLeft');
