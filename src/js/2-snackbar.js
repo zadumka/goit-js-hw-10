@@ -33,6 +33,7 @@ form.addEventListener('submit', event => {
         position: 'topRight',
         color: '#59a10d',
         iconUrl: iconOk,
+        timeout: 3000,
       });
     })
     .catch(delay => {
@@ -44,6 +45,7 @@ form.addEventListener('submit', event => {
         position: 'topRight',
         color: '#ef4040',
         iconUrl: iconError,
+        timeout: 3000,
       });
     });
 
