@@ -33,6 +33,7 @@ flatpickr('#datetime-picker', {
       ],
     },
   },
+  defaultDate: new Date(),
   onClose(selectedDates) {
     if (selectedDates.length > 0) {
       const selectedDate = selectedDates[0];
@@ -56,7 +57,7 @@ flatpickr('#datetime-picker', {
     }
   },
   dateFormat: 'Y-m-d H:i',
-  defaultDate: new Date(),
+  
 });
 
 function addLeadingZero(value) {
